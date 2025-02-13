@@ -1,10 +1,14 @@
-# TEE Agent
+# Constella
+
+Autonomous wallet for agents
 
 ## Concept
 
-This is a tee agent running in a nitro enclave instance.
-The code of the agent is signed by aws and its public key is generated randomly at start.
-No one but the agent has access to the corresponding private key.
+This is a wallet running in a nitro enclave instance and the code of the wallet is signed by aws.
+
+To begin with an agent needs to register its unique signature (which can be its (system prompt + llm provider) in case of externally hosted llm models) to generate a public address.
+
+Only valid agent actions i.e. requests signed by the llm provider that include the original system prompt are allowed to make transactions with the wallet.
 
 ## Verify agent 
 
