@@ -10,6 +10,17 @@ To begin with an agent needs to register its unique signature (which can be its 
 
 Only valid agent actions i.e. requests signed by the llm provider that include the original system prompt are allowed to make transactions with the wallet.
 
+## Setup
+
+Only nitro enabled ec2 instances can run this wallet. You need to be launch any of the instance types mentioned [here](https://docs.aws.amazon.com/ec2/latest/instancetypes/ec2-nitro-instances.html) as long as they have more than 4 cpu cores.
+
+The setup script works only for Amazon Linux 2 AMI (HVM). While launching the instance make sure it has sufficient storage, has access to the internet (allow HTTPS traffic from the internet) and nitro enabled (Nitro Enclave enabled in the advanced settings).
+
+Run the setup script after launching the instance. It will install `git`, `nitro-cli`, `docker`, `golang` and `gvproxy`.
+You might need to reboot the instance after running the setup script.
+
+[Setup script](https://github.com/AlwaysHungrie/constella/blob/main/setup.sh)
+
 ## Verify agent 
 
 ## Verify the code attestation
