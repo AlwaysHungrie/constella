@@ -23,9 +23,16 @@ You might need to reboot the instance after running the setup script.
 
 ## Installing
 
-Now clone this repo, `git clone https://github.com/AlwaysHungrie/constella.git && cd constella && chmod +X run-enclave.sh` and running `make` will build an enclave image as well as start the wallet server in debug mode.
+Clone this repo, `git clone https://github.com/AlwaysHungrie/constella.git && cd constella` 
 
-## Verify agent 
+Make the run-enclave.sh executable, `chmod +X run-enclave.sh`
+
+Increase the memory allocated to the enclave, `sudo vim /etc/nitro_enclaves/allocator.yaml`, set `memory_mib: 3000`
+and restart the allocator service, `sudo systemctl restart nitro-enclaves-allocator.service`
+
+Running `make` will build an enclave image as well as start the wallet server in debug mode.
+
+## Verify code hash
 
 
 ## Verify the code attestation
