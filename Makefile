@@ -1,5 +1,5 @@
 prog := python-enclave
-version := $(shell git describe --tag --dirty)
+version := $(shell git describe --tag --dirty --always)
 image_tag := $(prog):$(version)
 image_tar := $(prog)-$(version)-kaniko.tar
 image_eif := $(image_tar:%.tar=%.eif)

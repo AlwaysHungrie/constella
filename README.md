@@ -21,7 +21,12 @@ You might need to reboot the instance after running the setup script.
 
 [Setup script](https://github.com/AlwaysHungrie/constella/blob/main/setup.sh)
 
+## Installing
+
+Now clone this repo, `git clone https://github.com/AlwaysHungrie/constella.git && cd constella && chmod +X run-enclave.sh` and running `make` will build an enclave image as well as start the wallet server in debug mode.
+
 ## Verify agent 
+
 
 ## Verify the code attestation
 
