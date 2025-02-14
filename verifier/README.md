@@ -4,7 +4,7 @@ This is a rust crate that compiles into wasm code and can be used to verify an a
 
 [crate](https://github.com/AlwaysHungrie/constella/verifier/crate) contains the actual certificate verification logic.
 
-nodejs (example) contains the sample nodejs code to run the wasm generated.
+[nodejs (example)](https://github.com/AlwaysHungrie/constella/tree/main/verifier/nodejs%20(example)) contains the sample nodejs code to run the wasm generated.
 
 ## Compile to WebAssembly
 
@@ -18,3 +18,4 @@ nodejs (example) contains the sample nodejs code to run the wasm generated.
 ```
 
 You can also compile for web by running `wasm-bindgen target/wasm32-unknown-unknown/release/nitro_attestation_verifier.wasm --out-dir ../verifier-js --web`
+

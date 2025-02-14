@@ -2,7 +2,7 @@
 
 [Docker Hub](https://hub.docker.com/repository/docker/dhairyashah98/python-base/general)
 
-Adding python dependencies directly to the wallet will lead to inconsistencies in the docker image built and hence result in different PCRS values for each build.
+Adding python dependencies directly to the wallet will lead to inconsistencies in the docker image built and hence result in different PCR values for each build.
 
 We need to add dependencies separately, and use this as the base image to be run inside the enclave.
 
@@ -18,7 +18,7 @@ docker buildx build --platform=linux/amd64 --push -t dhairyashah98/python-base:3
 
 The image hosted [here](https://hub.docker.com/repository/docker/dhairyashah98/python-base/general) is the same as the one that will be used inside the enclave and is generated using the `base.Dockerfile` file.
 
-Users should verify the contents of the image when building the enclave image themselves to verify the PCRS values.
+Users should verify the contents of the image when building the enclave image themselves to verify the PCR values.
 
 ### Viewing the image contents
 
