@@ -56,10 +56,6 @@ run-debug: $(image_eif)
 clean:
 	rm -f $(prog)*
 
-.PHONY: run-proxy
-run-proxy:
-	./gvproxy.sh
-
 .PHONY: stop
 stop:
 	nitro-cli terminate-enclave --all

@@ -1,6 +1,6 @@
-# Constella
+# Constella Wallet
 
-Autonomous wallet for agents
+Autonomous wallet for agents. 
 
 ## Concept
 
