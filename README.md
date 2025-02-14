@@ -35,9 +35,9 @@ Can also be obtained by visiting [https://aws-nitro-enclaves.amazonaws.com/AWS_N
 This is to check if the wallet code currently running on constella.one is the exact same code as present in this repository.
 
 ```
-"PCR0": "c12bca1be065d4a9d587574f52e3544bf29ad9ae382902c99fe86896670ca1c1e0600c82596ef31b01c2dd5f27607177",
+"PCR0": "294e8442cb9eccf0a6e0f7052cf43b2d294f557628a55d7ba7b0137aa13d944c90bd5f627cb6de29c60b7b861e790ea3",
 "PCR1": "0343b056cd8485ca7890ddd833476d78460aed2aa161548e4e26bedf321726696257d623e8805f3f605946b3d8b0c6aa",
-"PCR2": "f0049f00b55633febb7ce228847ee883344615b6d55222e3a0c3e734217ebdb4373f5e4f38f71fa2477e11dd0d39c74c"
+"PCR2": "4e805c51312651e9aebd8ea6bed35750f6c21d94110fcc02db66bbd321f605eaf863ba407e513ea93dc3b2b3f9f6922d"
 ```
 
 Can also be obtained by following the setup instructions and building the wallet in your own nitro enabled instance

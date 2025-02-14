@@ -1,0 +1,33 @@
+[package]
+name = "nitro-attestation-verifier"
+version = "0.0.1"
+edition = "2018"
+
+[dependencies]
+serde_cbor = { version = "0.11.2", default-features = true, features = [
+    "alloc",
+] }
+base64 = "0.22.1"
+x509-cert = { version = "0.2.5", default-features = false }
+rsa = "0.8.0"
+p384 = { version = "0.13.0", default-features = false, features = [
+    "arithmetic",
+    "ecdh",
+    "ecdsa",
+    "test-vectors",
+    "expose-field",
+    "pkcs8",
+    "sha384",
+] }
+rustls-pemfile = { version = "2.1.2", features = ["std"] }
+rustls = { version = "0.20.4" }
+hex = "0.4.3"
+tracing = "0.1.40"
+thiserror = "1.0.64"
+wasm-bindgen = "0.2"
+js-sys = "0.3"
+getrandom = { version = "0.2.3", features = ["js"] }
+x509-parser = "0.15"
+
+[lib]
+crate-type = ["cdylib"]

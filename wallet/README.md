@@ -69,7 +69,7 @@ The wallet can also provide the attestation document by calling the nitriding en
 curl -X GET http://0.0.0.0:7047/api/v1/config
 ```
 
-The attestation document obtained can be verified using the `verifier` section of this repository.
+The attestation document obtained can be verified using the [verifier](https://github.com/AlwaysHungrie/constella/verifier/README.md) module
 
 ## Running gvproxy automatically on startup
 
