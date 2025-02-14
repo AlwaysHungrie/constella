@@ -18,7 +18,7 @@ Custom TCP, Port Range: 8443, Source: Custom 0.0.0.0/0
 
 ## 1. Setup script
 
-The `setup.sh` script provided needs to be run at the root directory so you need to copy the script to the root directory first.
+The [`setup.sh`](https://github.com/AlwaysHungrie/constella/setup/setup.sh) script provided needs to be run at the root directory so you need to copy the script to the root directory first.
 
 ```bash
 cp setup.sh ~ && cd ~ && chmod +x setup.sh && ./setup.sh 
@@ -42,4 +42,4 @@ Run the `./gvproxy.sh` script in order to setup gvproxy to start on boot and sta
 
 ## Next Steps
 
-You can now build the [wallet](https://github.com/AlwaysHungrie/constella/wallet/README.md), the [verifier](https://github.com/AlwaysHungrie/constella/verifier/README.md) and run as per requirements by following their respective instructions.
+You can now build the [wallet](https://github.com/AlwaysHungrie/constella/wallet/README.md), the [verifier](https://github.com/AlwaysHungrie/constella/verifier/README.md) and run as per requirement by following their respective instructions.
