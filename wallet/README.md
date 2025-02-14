@@ -2,7 +2,7 @@
 
 This wallet code runs inside a nitro enclave and uses [nitriding](https://github.com/brave/nitriding-daemon) to communicate over TCP. 
 
-## Verifying PCRS values
+## Verifying PCR values
 
 To build the wallet image and run it in debug mode inside the enclave, run the following command:
 
@@ -10,9 +10,9 @@ To build the wallet image and run it in debug mode inside the enclave, run the f
 make 
 ```
 
-The PCRS values will be printed on the console as a part of the build process. Alternatively you can close the running console and run `nitro-cli describe-enclaves` to view the PCRS values of the wallet.
+The PCR values will be printed on the console as a part of the build process. Alternatively you can close the running console and run `nitro-cli describe-enclaves` to view the PCR values of the wallet.
 
-The PCRS values obtained should match the publicly posted PCRS values of Constella as well as the ones returned by the wallet in the attestation certificate.
+The PCR values obtained should match the publicly posted PCR values of Constella as well as the ones returned by the wallet in the attestation document.
 
 ## Running the wallet
 
@@ -35,7 +35,7 @@ http:/unix/services/forwarder/expose \
 -X POST \
 -d '{"local":":7047","remote":"192.168.127.2:7047"}'
 
-# some nitriding endpoints including the attestation certificate are exposed on port 443
+# some nitriding endpoints including the attestation document are exposed on port 443
 sudo curl --unix-socket /tmp/network.sock \
 http:/unix/services/forwarder/expose \
 -X POST \
@@ -52,20 +52,20 @@ sudo nitro-cli terminate-enclave --all
 sudo ./run-enclave.sh python-enclave-<version>-kaniko.eif
 ```
 
-## Getting the attestation certificate
+## Getting the attestation document
 
-Provided the nginx proxy is not running, you can get the attestation certificate directly from nitriding by visiting 
+Provided the nginx proxy is not running, you can get the attestation document directly from nitriding by visiting 
 https://<ec2-elastic-ip>/enclave/attestation?nonce=<random-20-byte-nonce>(e.g. https://3.6.235.47/enclave/attestation?nonce=a03000acdaba654d6cfff9b12d45d1c3434e7fd7)
 
 The connection will not be secure as tls is not enabled on nitriding.
 
-The wallet can also provide the attestation certificate by calling the nitring endpoint for you and returning the results.
+The wallet can also provide the attestation document by calling the nitring endpoint for you and returning the results.
 
 ```
 curl -X GET http://0.0.0.0:7047/api/v1/config
 ```
 
-The certificate obtained can be verified using the `verifier` section of this repository.
+The attestation document obtained can be verified using the `verifier` section of this repository.
 
 ## Running gvproxy automatically on startup
 

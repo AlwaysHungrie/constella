@@ -5,6 +5,8 @@ cover.out
 .env
 out/
 node_modules
-freysa-autonomous-project
 __pycache__
 *.pyc
+
+.DS_Store
+**/.DS_Store
