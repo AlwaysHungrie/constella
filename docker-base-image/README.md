@@ -1,4 +1,6 @@
-# Docker Base Image [Docker Hub](https://hub.docker.com/repository/docker/dhairyashah98/python-base/general)
+# Docker Base Image 
+
+[Docker Hub](https://hub.docker.com/repository/docker/dhairyashah98/python-base/general)
 
 Adding python dependencies directly to the wallet will lead to inconsistencies in the docker image built and hence result in different PCRS values for each build.
 
@@ -14,7 +16,15 @@ docker buildx build --platform=linux/amd64 --push -t dhairyashah98/python-base:3
 
 ## Verifying the image
 
-The image is hosted on [Docker Hub](https://hub.docker.com/repository/docker/dhairyashah98/python-base/general)
-and is the same as the one that will be used inside the enclave.
+The image hosted [here](https://hub.docker.com/repository/docker/dhairyashah98/python-base/general) is the same as the one that will be used inside the enclave and is generated using the `base.Dockerfile` file.
 
-Users should verify the contents of the image
+Users should verify the contents of the image when building the enclave image themselves to verify the PCRS values.
+
+### Viewing the image contents
+
+```
+brew install dive
+dive dhairyashah98/python-base:3.12-deps
+```
+
+All commands used to build the image can be seen in layer details for each layer
