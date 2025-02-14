@@ -12,7 +12,7 @@ make
 
 The PCRS values will be printed on the console as a part of the build process. Alternatively you can close the running console and run `nitro-cli describe-enclaves` to view the PCRS values of the wallet.
 
-The PCRS values obtained should match the publicly posted PCRS values of Constella as well as the ones returned by in the attestation certificate.
+The PCRS values obtained should match the publicly posted PCRS values of Constella as well as the ones returned by the wallet in the attestation certificate.
 
 ## Running the wallet
 
@@ -22,20 +22,20 @@ Nitriding requires `gvproxy` (installed during setup) to be running and forwardi
 To run gvproxy,
 
 ```
-# stop any running gvproxy and clear port forwarding configuration
+# stop any running gvproxy and clear forwarding configuration
 sudo pkill -f gvproxy
 sudo rm -rf /tmp/network.sock
 
 # run gvproxy
 sudo /home/ec2-user/gvisor-tap-vsock/bin/gvproxy -listen vsock://:1024 -listen unix:///tmp/network.sock &
 
-# wallet runs on port 7047
+# our wallet runs on port 7047
 sudo curl --unix-socket /tmp/network.sock \
 http:/unix/services/forwarder/expose \
 -X POST \
 -d '{"local":":7047","remote":"192.168.127.2:7047"}'
 
-# nitriding runs on port 443
+# some nitriding endpoints including the attestation certificate are exposed on port 443
 sudo curl --unix-socket /tmp/network.sock \
 http:/unix/services/forwarder/expose \
 -X POST \
@@ -45,7 +45,7 @@ http:/unix/services/forwarder/expose \
 Once gvproxy is running, you can run the wallet in production mode:
 
 ```
-# stop any running enclaves
+# stop any previously running enclaves
 sudo nitro-cli terminate-enclave --all
 
 # run the enclave
@@ -66,3 +66,7 @@ curl -X GET http://0.0.0.0:7047/api/v1/config
 ```
 
 The certificate obtained can be verified using the `verifier` section of this repository.
+
+## Running gvproxy automatically on startup
+
+TODO: Add instructions on how to run gvproxy automatically on startup.
