@@ -9,7 +9,7 @@ import uvicorn
 app = FastAPI()
 
 NITRIDING_URL = "http://127.0.0.1:8080/enclave"
-NITRIDING_EXT_URL = "https://3.6.235.47"
+NITRIDING_EXT_URL = "https://3.6.235.47:8443"
 
 API_URL_PREFIX = "/api/v1"
 PORT = 7047

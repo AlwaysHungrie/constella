@@ -19,6 +19,8 @@ The PCR values obtained should match the publicly posted PCR values of Constella
 Just running the `make` command will not allow you to interact with the wallet as it is running inside the enclave.
 Nitriding requires `gvproxy` (installed during setup) to be running and forwarding ports 443 and 7047 to the nitriding's static ip 192.168.127.2.
 
+IMPORTANT: Nitriding adds a few important endpoints to port 443 but since we want 443 to be serving our wallet server instead, we need to open port 8443 in AWS Inbound rules for this instance's security group and then we will be forwarding port 8443 to nitriding's 443.
+
 To run gvproxy,
 
 ```
@@ -39,7 +41,7 @@ http:/unix/services/forwarder/expose \
 sudo curl --unix-socket /tmp/network.sock \
 http:/unix/services/forwarder/expose \
 -X POST \
--d '{"local":":443","remote":"192.168.127.2:443"}'
+-d '{"local":":8443","remote":"192.168.127.2:443"}'
 ```
 
 Once gvproxy is running, you can run the wallet in production mode:
@@ -55,11 +57,11 @@ sudo ./run-enclave.sh python-enclave-<version>-kaniko.eif
 ## Getting the attestation document
 
 Provided the nginx proxy is not running, you can get the attestation document directly from nitriding by visiting 
-https://<ec2-elastic-ip>/enclave/attestation?nonce=<random-20-byte-nonce>(e.g. https://3.6.235.47/enclave/attestation?nonce=a03000acdaba654d6cfff9b12d45d1c3434e7fd7)
+https://<ec2-elastic-ip>:8443/enclave/attestation?nonce=<random-20-byte-nonce>(e.g. https://3.6.235.47:8443/enclave/attestation?nonce=a03000acdaba654d6cfff9b12d45d1c3434e7fd7)
 
 The connection will not be secure as tls is not enabled on nitriding.
 
-The wallet can also provide the attestation document by calling the nitring endpoint for you and returning the results.
+The wallet can also provide the attestation document by calling the nitriding endpoint for you and returning the results.
 
 ```
 curl -X GET http://0.0.0.0:7047/api/v1/config

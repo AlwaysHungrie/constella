@@ -5,6 +5,11 @@ echo "📦 Updating yum and installing git"
 sudo yum update
 sudo yum install -y git
 
+echo "📦 Installing NGINX"
+sudo amazon-linux-extras install nginx1 -y
+sudo systemctl enable nginx
+sudo systemctl start nginx
+
 echo "📦 Installing docker"
 
 sudo yum -y install docker
