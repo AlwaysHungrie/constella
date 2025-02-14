@@ -37,8 +37,8 @@ In order to setup the wallet to work with an actual domain, follow instructions 
 
 ## 3. Gvproxy Setup (Optional)
 
-In order for a wallet to connect with the internet, gvproxy is required to be configured and running.
-Run the `./gvproxy.sh` script in order to setup gvproxy to start on boot and start port forwarding correctly.
+In order for a wallet to connect with the internet, gvproxy is required to be running.
+Run the `./proxy.sh` script in order to setup gvproxy and start port forwarding correctly.
 
 ## Next Steps
 
