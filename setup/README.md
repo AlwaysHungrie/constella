@@ -40,6 +40,8 @@ In order to setup the wallet to work with an actual domain, follow instructions 
 In order for a wallet to connect with the internet, gvproxy is required to be running.
 Run the `./proxy.sh` script in order to setup gvproxy and start port forwarding correctly.
 
+@TODO: Unable to run proxy.sh as a service
+
 ## Next Steps
 
 You can now build the [wallet](https://github.com/AlwaysHungrie/constella/wallet/README.md), the [verifier](https://github.com/AlwaysHungrie/constella/verifier/README.md) and run as per requirement by following their respective instructions.

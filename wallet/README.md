@@ -23,6 +23,8 @@ IMPORTANT: Nitriding adds a few important endpoints to port 443 but since we wan
 
 To run gvproxy,
 
+either run the `setup/proxy.sh` script or manually run the following commands:
+
 ```
 # stop any running gvproxy and clear forwarding configuration
 sudo pkill -f gvproxy
