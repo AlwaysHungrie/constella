@@ -13,3 +13,5 @@ __pycache__
 
 /target
 target
+
+venv/

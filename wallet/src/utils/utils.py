@@ -1,6 +1,8 @@
 import ssl
 import urllib.request
-    
+import secrets
+import hashlib
+
 def get_attestation(nitriding_ext_url):
     """Get the TEE code attestation"""
     url = (
@@ -17,3 +19,10 @@ def get_attestation(nitriding_ext_url):
     else:
         return r.read()
 
+
+# create a random 256 bit nonce
+def generate_nonce():
+    return secrets.token_hex(32)
+
+def generate_wallet_hash(nonce, domain, system_prompt):
+    return hashlib.sha256(f"{nonce}{domain}{system_prompt}".encode()).hexdigest()
