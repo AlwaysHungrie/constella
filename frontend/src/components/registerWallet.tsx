@@ -89,7 +89,6 @@ export const RegisterWallet = ({
 
         <div className="text-2xl font-bold text-center">
           Autonomous Wallet v0.0.1
-          <br />
         </div>
 
         {!address && (

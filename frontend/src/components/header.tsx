@@ -2,8 +2,10 @@ import { DIALOG_COPY } from '@/copy/dialogs'
 import React from 'react'
 
 export const Header = ({
+  setWidget,
   openDialog,
 }: {
+  setWidget: (widget: 'register' | 'verify') => void
   openDialog: (title: string, content: string) => void
 }) => {
   return (
@@ -23,19 +25,11 @@ export const Header = ({
         {[
           {
             label: DIALOG_COPY.CONTENT.SENTIENCE.LABEL,
-            onClick: () =>
-              openDialog(
-                DIALOG_COPY.CONTENT.SENTIENCE.TITLE,
-                DIALOG_COPY.CONTENT.SENTIENCE.CONTENT
-              ),
+            onClick: () => setWidget('register'),
           },
           {
             label: DIALOG_COPY.CONTENT.AUTONOMY.LABEL,
-            onClick: () =>
-              openDialog(
-                DIALOG_COPY.CONTENT.AUTONOMY.TITLE,
-                DIALOG_COPY.CONTENT.AUTONOMY.CONTENT
-              ),
+            onClick: () => setWidget('verify'),
           },
           {
             label: DIALOG_COPY.CONTENT.LINKS.LABEL,

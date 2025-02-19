@@ -10,7 +10,7 @@ from config import (
 )
 from utils.nitriding import signal_ready
 from utils.utils import get_attestation
-from routes import auth, data
+from routes import auth, data, verify
 
 app = FastAPI()
 
@@ -49,6 +49,7 @@ async def get_tee_config(request: Request):
 # Include routers
 app.include_router(auth.router, prefix=API_URL_PREFIX)
 app.include_router(data.router, prefix=API_URL_PREFIX)
+app.include_router(verify.router, prefix=API_URL_PREFIX)
 
 if __name__ == "__main__":
     print("🤖 Starting TEE-Agent")
