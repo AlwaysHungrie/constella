@@ -11,7 +11,7 @@ import { useState } from 'react'
 
 export default function Home() {
   const [dialog, setDialog] = useState<DialogContent | null>(null)
-  const [widget, setWidget] = useState<'register' | 'verify'>('register')
+  const [widget, setWidget] = useState<'register' | 'inspect'>('register')
 
   return (
     <div>
@@ -25,7 +25,7 @@ export default function Home() {
           }
         />
         {widget === 'register' && <RegisterWallet setDialog={setDialog} />}
-        {widget === 'verify' && <VerifyAttestation setDialog={setDialog} />}
+        {widget === 'inspect' && <VerifyAttestation setDialog={setDialog} />}
       </div>
     </div>
   )

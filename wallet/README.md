@@ -74,3 +74,11 @@ The attestation document obtained can be verified using the [verifier](https://g
 ## Running gvproxy automatically on startup
 
 TODO: Add instructions on how to run gvproxy automatically on startup.
+
+## Running server locally
+
+```
+source venv/bin/activate
+uvicorn src.main:app --host 0.0.0.0 --port 7048 --workers 4
+```
+

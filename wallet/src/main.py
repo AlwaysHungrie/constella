@@ -51,6 +51,21 @@ app.include_router(auth.router, prefix=API_URL_PREFIX)
 app.include_router(data.router, prefix=API_URL_PREFIX)
 app.include_router(verify.router, prefix=API_URL_PREFIX)
 
+@app.get("/presigned-url")
+async def get_presigned_url(request: Request):
+    print("🤖 Getting presigned url")
+    """Get the presigned url for the given bucket and key"""
+    key = request.query_params.get("key")
+    print(f"🤖 Key: {key}")
+    if key == "test":
+        return {
+            "downloadUrl": "https://tlsn-notary-test.s3.ap-south-1.amazonaws.com/0x8d3F77ee39AFC0e53aFF707aeeD051F8d05c42E6/0x8d3F77ee39AFC0e53aFF707aeeD051F8d05c42E6-private-1740088571441.presentation.tlsn"
+        }
+
+    return {
+        "downloadUrl": None
+    }
+
 if __name__ == "__main__":
     print("🤖 Starting TEE-Agent")
     try:

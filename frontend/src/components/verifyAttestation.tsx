@@ -1,7 +1,7 @@
 'use client'
 
 import { useCallback, useState } from 'react'
-import { HiExternalLink, HiInformationCircle } from 'react-icons/hi'
+import { HiExternalLink, HiInformationCircle, HiStar } from 'react-icons/hi'
 import { Popover, PopoverContent, PopoverTrigger } from './ui/popover'
 import Link from 'next/link'
 import CTAButton from './cta'
@@ -36,7 +36,6 @@ export const VerifyAttestation = ({
 
           return
         }
-        
 
         setDialog({
           TITLE: attestation,
@@ -71,22 +70,31 @@ export const VerifyAttestation = ({
         }}
       >
         <div className="text-2xl font-bold text-center">
-          Verify Attestations
+          Inspect Attestations
         </div>
         <div className="opacity-80 text-sm py-6">
           <div className="flex items-center gap-2 mb-px w-full">
             <div className="flex-1">Agent&apos;s wallet address</div>
-            {/* <Popover>
+            <Popover>
               <PopoverTrigger>
                 <HiInformationCircle className="w-4 h-4 text-[#05D505] hover:opacity-80 transition-opacity" />
               </PopoverTrigger>
               <PopoverContent className="absolute bg-white rounded-sm shadow-sm p-1 max-w-xs text-sm text-black whitespace-normal">
                 <p className="">
-                  Enter the domain where your agent is hosted. Attestations
-                  received only from this domain will be accepted.
+                  In order to test with a dummy attestation, use the following
+                  address and key.
+                  <br />
+                  <br />
+                  <span className="italic text-xs">Wallet address:</span>&nbsp;
+                  <span className="bg-red-50 p-1 rounded-sm break-all">
+                    0x2515B1d51610b7EF2e2C614A01E6Bccd0a299D3e
+                  </span>
+                  <br />
+                  <span className="italic text-xs">File key:</span>&nbsp;
+                  <span className="bg-red-50 p-1 rounded-sm">test</span>
                 </p>
               </PopoverContent>
-            </Popover> */}
+            </Popover>
           </div>
           <input
             type="text"
@@ -120,13 +128,18 @@ export const VerifyAttestation = ({
             value={attestation}
             onChange={(e) => setAttestation(e.target.value)}
           />
-          <br />
+          <span className="italic mt-2">
+            <>
+              Do not share attestations with sensitive data with untrusted
+              parties.
+            </>
+          </span>
           <br />
           <br />
           <span className="italic">
             <>
-              &lt;This is a tool to inspect attestations, do not
-              share attestations with sensitive data with anyone&gt;
+              &lt;This is a general tool to inspect any suported tls
+              attestations, and does not make any wallet interactions&gt;
             </>
           </span>
         </div>
@@ -142,6 +155,19 @@ export const VerifyAttestation = ({
         >
           Verify Attestation
         </CTAButton>
+      </div>
+
+      <div className="absolute bottom-[-24px] right-0">
+        <div className="flex flex-col text-xs font-bold w-full">
+          <Link
+            href="https://verify-nitro.pineappl.xyz"
+            target="_blank"
+            className="flex items-center gap-1"
+          >
+            <HiStar className="w-4 h-4 text-[#05D505] hover:opacity-80 transition-opacity" />
+            Verify Constella
+          </Link>
+        </div>
       </div>
 
       <div className="absolute bottom-[-24px] left-0">
