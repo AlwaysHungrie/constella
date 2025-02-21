@@ -1,9 +1,9 @@
 from fastapi import APIRouter, Request
 from fastapi.responses import JSONResponse
-from db.prisma import prisma
-from utils.utils import generate_nonce, generate_wallet_hash
-from config import logger
-from web3.wallet import generate_eth_wallet
+from ..db.prisma import prisma
+from ..utils.utils import generate_nonce, generate_wallet_hash
+from ..config import logger
+from ..web3.wallet import generate_eth_wallet
 
 router = APIRouter()
 

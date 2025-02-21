@@ -1,8 +1,8 @@
 from fastapi import APIRouter, Request
 from fastapi.responses import JSONResponse
 import requests
-from config import logger
-from db.prisma import prisma
+from ..config import logger
+from ..db.prisma import prisma
 import subprocess
 import json
 

@@ -1,16 +1,16 @@
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
-from db.prisma import prisma
+from .db.prisma import prisma
 import uvicorn
 
-from config import (
+from .config import (
     API_URL_PREFIX, PORT, TEE_NAME, 
     NITRIDING_URL, NITRIDING_EXT_URL, 
     FRONTEND_HOST
 )
-from utils.nitriding import signal_ready
-from utils.utils import get_attestation
-from routes import auth, data, verify
+from .utils.nitriding import signal_ready
+from .utils.utils import get_attestation
+from .routes import auth, data, verify
 
 app = FastAPI()
 
