@@ -16,3 +16,5 @@ FRONTEND_HOST = os.getenv("FRONTEND_HOST")
 # Logging Configuration
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__) 
+
+IS_NITRO_ENABLED = os.getenv("ENVIRONMENT") == "prod"

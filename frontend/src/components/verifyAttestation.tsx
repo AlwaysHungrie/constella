@@ -87,7 +87,7 @@ export const VerifyAttestation = ({
                   <br />
                   <span className="italic text-xs">Wallet address:</span>&nbsp;
                   <span className="bg-red-50 p-1 rounded-sm break-all">
-                    0x2515B1d51610b7EF2e2C614A01E6Bccd0a299D3e
+                    {process.env.NEXT_PUBLIC_TEST_WALLET_ADDRESS}
                   </span>
                   <br />
                   <span className="italic text-xs">File key:</span>&nbsp;

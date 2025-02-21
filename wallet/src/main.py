@@ -6,11 +6,12 @@ import uvicorn
 from .config import (
     API_URL_PREFIX, PORT, TEE_NAME, 
     NITRIDING_URL, NITRIDING_EXT_URL, 
-    FRONTEND_HOST
+    FRONTEND_HOST, IS_NITRO_ENABLED
 )
 from .utils.nitriding import signal_ready
 from .utils.utils import get_attestation
 from .routes import auth, data, verify
+from .static.sampleAttestation import SAMPLE_ATTESTATION
 
 app = FastAPI()
 
@@ -40,12 +41,15 @@ def home():
 @app.get(API_URL_PREFIX + "/config")
 async def get_tee_config(request: Request):
     """Get the TEE configuration"""
-    attestation = get_attestation(NITRIDING_EXT_URL)
-    return {
-        "tee_name": TEE_NAME,
-        "code_attestation": attestation.decode("utf-8"),
-    }
-
+    if IS_NITRO_ENABLED:
+        attestation = get_attestation(NITRIDING_EXT_URL)
+        return {
+            "tee_name": TEE_NAME,
+            "code_attestation": attestation.decode("utf-8"),
+        }
+    
+    return SAMPLE_ATTESTATION
+    
 # Include routers
 app.include_router(auth.router, prefix=API_URL_PREFIX)
 app.include_router(data.router, prefix=API_URL_PREFIX)
