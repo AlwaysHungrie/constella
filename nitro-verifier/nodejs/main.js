@@ -11,7 +11,6 @@ app.use(express.json())
 app.post('/verify', (req, res) => {
   const { attestation, pcr0, pcr1, pcr2, expiryDate, awsRootCertificate } =
     req.body
-  console.log(req.body)
   const nonce = new Uint8Array(20)
   const date = new Date(expiryDate)
   const result = verify_js(
@@ -30,13 +29,13 @@ app.listen(port, () => {
 
 const base64ToUint8Array = (base64) => {
   const array = Uint8Array.from(Buffer.from(base64, 'base64'))
-  console.log(array)
+  // console.log(array)
   return array
 }
 
 const dateToBigInt = (date) => {
   const num = BigInt(date.getTime()) / BigInt(1000)
-  console.log(num)
+  // console.log(num)
   return num
 }
 
@@ -44,7 +43,7 @@ const parsePcr = (pcr) => {
   const bytes = new Uint8Array(
     pcr.match(/.{1,2}/g).map((byte) => parseInt(byte, 16))
   )
-  console.log(bytes)
+  // console.log(bytes)
   return bytes
 }
 
