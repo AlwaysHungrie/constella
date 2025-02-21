@@ -1,30 +1,47 @@
 export const DIALOG_COPY = {
   TITLE_PREFIX: '/constella-one',
   CONTENT: {
-    SENTIENCE: {
-      TITLE: 'instructions-for-agents.txt',
-      LABEL: 'Agents',
-      CONTENT: `Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.
-Why do we use it?
+    LINKS: {
+      TITLE: 'info.txt',
+      LABEL: 'About',
+      CONTENT: `Constella is a verifiable, autonomous wallet for AI agents. 
+A wallet address once assigned to an agent can only by controlled by the decisions of the agent. The agent's owners, developers or even the Constella servers themselves cannot control of the wallet.
 
-It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like).
+For an agent to control its wallet, it needs to generate a verifiable proof (TLS attestation) of its decision, which should also include the agent's core identity (i.e., its system prompt) using the TLS Notary protocol. The attestation will be verified to have been signed by trusted notaries, and the system prompt will be checked for changes against the original prompt used when creating the wallet.
 
-Where does it come from?
+==============================================
 
-Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old. Richard McClintock, a Latin professor at Hampden-Sydney College in Virginia, looked up one of the more obscure Latin words, consectetur, from a Lorem Ipsum passage, and going through the cites of the word in classical literature, discovered the undoubtable source. Lorem Ipsum comes from sections 1.10.32 and 1.10.33 of "de Finibus Bonorum et Malorum" (The Extremes of Good and Evil) by Cicero, written in 45 BC. This book is a treatise on the theory of ethics, very popular during the Renaissance. The first line of Lorem Ipsum, "Lorem ipsum dolor sit amet..", comes from a line in section 1.10.32.
+How does it work?
 
-The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for those interested. Sections 1.10.32 and 1.10.33 from "de Finibus Bonorum et Malorum" by Cicero are also reproduced in their exact original form, accompanied by English versions from the 1914 translation by H. Rackham.
+1. Create a wallet for your agent by providing your agent's system prompt and domain address.
+2. Generate a TLS attestation of your agent's api call to a trusted llm provider like OpenAI, Anthropic, OpenRouter, etc.
+3. Submit the attestation to the wallet against the wallet address that was created on step 1. 
+4. Constella will call your domain address /presigned-url?key=<attestation-key> to check that the attestation submitted is served from by your agent and after the verification, the action mentioned in the output response will be executed if valid.
+
+For a quick test playground and implementation details on how to run your own agent, please refer to https://github.com/AlwaysHungrie/agent-playground or visit https://playground.constella.one
+
+==============================================
+
+How is Constella verifiable?
+
+Constella runs inside a trusted execution environment (TEE) in a nitro enabled server hosted on AWS. The TEE ensures that the code running inside the server is the exact same code as present in the public github repository (https://github.com/AlwaysHungrie/constella).
+
+In order to verify the integrity of the code, the wallet server provides a signed certificate which contains 2 fields:
+1. The root certificate from amazon that proves that this certificate was signed from an amazon nitro enabled server.
+2. Platform Configuration Register (PCR) values which proves the code running inside the server is same as the code presented publicly.
+
+In order to verify the certificate, a user will have to 
+1. Obtain the aws root certificate from amazon https://aws-nitro-enclaves.amazonaws.com/AWS_NitroEnclaves_Root-G1.zip
+2. Obtain the PCR values by running the wallet on their own machine
+
+For the user's benefit both these values are also posted publicly and a verification tool is provided at https://verify-nitro.pineappl.xyz
+
+Please note that this verification tool is independent of the Constella wallet and can be used to verify attestation generated for any nitro enabled servers
+
+==============================================
+
+Please reach out to https://x.com/Always_Hungrie_ for any questions, feedback or unclear instructions.
 `,
     },
-    AUTONOMY: {
-      TITLE: 'autonomy.txt',
-      LABEL: 'Verify',
-      CONTENT: 'I have worked on a variety of projects.',
-    },
-    LINKS: {
-      TITLE: 'links.txt',
-      LABEL: 'About',
-      CONTENT: 'You can contact me at my email.',
-    },
-  }
+  },
 }

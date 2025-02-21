@@ -175,7 +175,7 @@ export const RegisterWallet = ({
                     prompt used by your agent in the attestations.
                     <br />
                     In order to use variables in the system prompt, replace all
-                    characters with &apos;X&apos; and make the each character of
+                    characters with &apos;X&apos; and mark the each character of
                     the variable as private in the attestation.
                   </p>
                 </PopoverContent>
