@@ -3,7 +3,7 @@ import logging
 
 # API Configuration
 API_URL_PREFIX = "/api/v1"
-PORT = 7047
+PORT = 7048
 TEE_NAME = "constella_wallet"
 
 # Nitriding Configuration
