@@ -3,8 +3,14 @@
 import React, { useCallback, useEffect, useRef } from 'react'
 
 // Constants
-const STAR_COUNT = 250
-const STAR_BASE_SPEED = 0.8
+const STAR_COUNT = {
+  MOBILE: 75,
+  DESKTOP: 250
+}
+const STAR_BASE_SPEED = {
+  MOBILE: 1.6,
+  DESKTOP: 0.8
+}
 const VANISHING_POINT_PERIOD = 1200
 const PROJECTION_CONSTANT = 64
 const MAX_Z_DISTANCE = 1000
@@ -22,7 +28,8 @@ interface CanvasContext {
 }
 
 function initializeStars({ canvas }: CanvasContext): Star[] {
-  return Array.from({ length: STAR_COUNT }, () => ({
+  const starCount = window.innerWidth < 768 ? STAR_COUNT.MOBILE : STAR_COUNT.DESKTOP
+  return Array.from({ length: starCount }, () => ({
     x: (Math.random() - 0.5) * canvas.width * 8,
     y: (Math.random() - 0.5) * canvas.height * 8,
     z: Math.random() * MAX_Z_DISTANCE,
@@ -101,7 +108,11 @@ export default function StarBackground({ isPaused }: { isPaused: boolean }) {
 
         stars.forEach((star) => {
           const speed =
-            STAR_BASE_SPEED * (1 + (MAX_Z_DISTANCE - star.z) / MAX_Z_DISTANCE)
+            window.innerWidth < 768
+              ? STAR_BASE_SPEED.MOBILE *
+                (1 + (MAX_Z_DISTANCE - star.z) / MAX_Z_DISTANCE)
+              : STAR_BASE_SPEED.DESKTOP *
+                (1 + (MAX_Z_DISTANCE - star.z) / MAX_Z_DISTANCE)
 
           if (!isPaused) {
             star.z -= speed

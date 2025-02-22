@@ -76,11 +76,12 @@ export const RegisterWallet = ({
   }, [address, getNonce])
 
   return (
-    <div className="relative text-[#05D505] my-4 flex-1 flex flex-col justify-center aspect-[16/9] w-[400px] max-w-[90vw] mx-auto px-2 sm:px-4">
+    <div className="relative text-[#05D505] my-4 flex-1 flex flex-col justify-center aspect-[16/9] w-[400px] max-w-[90vw] mx-auto px-2">
       <div
-        className="relative border border-[#004400] bg-[#e2ebe215] rounded-lg p-4 backdrop-blur-[2px] flex flex-col h-full overflow-y-auto"
+        className="relative border border-[#004400] bg-[#e2ebe215] rounded-lg p-4 backdrop-blur-[2px] flex flex-col h-full overflow-y-auto my-4"
         style={{
           maxHeight: 'min(70vh, 600px)',
+          // minHeight: 'min(70vh, 600px)',
         }}
       >
         {/* <div className="text-2xl font-bold sm:my-2 w-full text-center">

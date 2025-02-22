@@ -17,7 +17,7 @@ export default function Home() {
     <div>
       <StarBackground isPaused={!!dialog} />
       <Dialog onClose={() => setDialog(null)} dialog={dialog} />
-      <div className="min-h-screen w-full flex flex-col items-center z-50 py-4 sm:py-6 font-mono overflow-x-hidden">
+      <div className="min-h-dvh w-full flex flex-col items-center z-50 py-4 sm:py-6 font-mono overflow-x-hidden">
         <Header
           setWidget={setWidget}
           openDialog={(title, content) =>
