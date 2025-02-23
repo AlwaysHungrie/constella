@@ -236,7 +236,7 @@ export const RegisterWallet = ({
       <div className="absolute bottom-[-24px] left-0">
         <div className="flex flex-col text-xs font-bold w-full">
           <Link
-            href="https://playground.constella.one"
+            href="https://playground-frontend.constella.one"
             target="_blank"
             className="flex items-center gap-1"
           >
