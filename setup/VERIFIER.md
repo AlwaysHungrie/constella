@@ -1,29 +1,17 @@
-# How to setup a Notary Server
+# How to setup a Verifier Server
 
-sudo apt update
-sudo apt install curl build-essential gcc make -y
-sudo apt install libssl-dev -y
-sudo apt-get install pkg-config -y
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
+source ~/.bashrc 
+nvm install --lts
+nvm use --lts
 
-curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
-source $HOME/.cargo/env
+npm i -g pnpm
+pnpm i
 
-https://github.com/tlsnotary/tlsn.git
+npm run build
 
-cd tlsn/crates/notary/server/
-
-change config/config.yaml to have tls disabled and other changes if req
-
-cargo build --release
-
-cp -r config ../../../target/release/
-cp -r fixtures ../../../target/release/
-
-sudo apt update
-sudo apt install nginx
-sudo systemctl start nginx
-sudo systemctl enable nginx
-sudo systemctl status nginx
+npm i -g pm2
+pm2 start npm --name "verifier-frontend" -- start
 
 sudo vim /etc/nginx/sites-available/nitro-verifier.pineappl.xyz
 
@@ -32,7 +20,7 @@ server {
     server_name nitro-verifier.pineappl.xyz;
 
     location / {
-        proxy_pass http://localhost:3000;
+        proxy_pass http://localhost:3000/;
         proxy_set_header Host $host;
         proxy_set_header X-Real-IP $remote_addr;
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
@@ -44,8 +32,8 @@ server {
         proxy_set_header Connection "upgrade";
     }
 
-    location /api {
-        proxy_pass http://localhost:3000/api;
+    location ^~ /api {
+        proxy_pass http://localhost:3001/;
         proxy_set_header Host $host;
         proxy_set_header X-Real-IP $remote_addr;
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
@@ -60,4 +48,6 @@ sudo apt update
 sudo apt install certbot python3-certbot-nginx
 sudo certbot --nginx -d nitro-verifier.pineappl.xyz
 
-nohup ./notary-server > /dev/null 2>&1 &
+// start the server, src/main.js
+pm2 start main.js --name "verifier-server" -- -p 3001
+
