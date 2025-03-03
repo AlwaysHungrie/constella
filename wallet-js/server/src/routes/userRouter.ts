@@ -10,12 +10,20 @@ router.delete(
   '/',
   jwtMiddleware,
   asyncHandler(async (req: AuthenticatedRequest, res: express.Response) => {
+    await deleteUser(req.user.address)
+    res.json({ success: true })
+  })
+)
+
+router.get(
+  '/',
+  jwtMiddleware,
+  asyncHandler(async (req: AuthenticatedRequest, res: express.Response) => {
     const user = await getUserByAddress(req.user.address)
     if (!user) {
       throw createError(404, 'User not found')
     }
-    await deleteUser(user.id)
-    res.json({ success: true })
+    res.json({ success: true, user })
   })
 )
 
