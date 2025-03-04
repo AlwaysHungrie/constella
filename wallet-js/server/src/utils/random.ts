@@ -15,7 +15,11 @@ export const generateDbCredentials = (address: string, privateKey: string) => {
   }
 }
 
-export const generateWalletHash = async (nonce: string, domain: string, systemPrompt: string) => {
+export const generateWalletHash = async (
+  nonce: string,
+  domain: string,
+  systemPrompt: string
+) => {
   const hash = crypto.createHash('sha256')
   hash.update(nonce)
   hash.update(domain)
@@ -23,20 +27,21 @@ export const generateWalletHash = async (nonce: string, domain: string, systemPr
   return hash.digest('hex')
 }
 
-export const generateWallet = async (walletHash: string) => {
+export const generateWallet = async (nonce: string, domain: string, systemPrompt: string) => {
   // Create a SHA256 hash of the input string to get 32 bytes
+  const walletHash = await generateWalletHash(nonce, domain, systemPrompt)
   let privateKey = crypto.createHash('sha256').update(walletHash).digest('hex')
-  
+
   if (!privateKey.startsWith('0x')) {
     privateKey = '0x' + privateKey
   }
-  
+
   if (privateKey.length > 66) {
     privateKey = privateKey.slice(0, 66)
   } else if (privateKey.length < 66) {
     privateKey = privateKey.padEnd(66, '0')
   }
-  
+
   if (!isHexString(privateKey, 32)) {
     throw new Error('Invalid wallet hash, must be 32 bytes')
   }
@@ -45,5 +50,19 @@ export const generateWallet = async (walletHash: string) => {
   return {
     privateKey: wallet.privateKey,
     address: wallet.address,
+  }
+}
+
+export const generateDbUrls = (
+  dbName: string,
+  dbUser: string,
+  dbPassword: string,
+  dbHost: string,
+  dbPort: number
+) => {
+  const schemaName = `schema_${dbName}`
+  return {
+    connectionString: `postgresql://${dbUser}:${dbPassword}@${dbHost}:${dbPort}/${dbName}?schema=${schemaName}&sslmode=require&sslrootcert=ca.pem`,
+    shadowConnectionString: `postgresql://${dbUser}:${dbPassword}@${dbHost}:${dbPort}/${dbName}_shadow?schema=${schemaName}&sslmode=require&sslrootcert=ca.pem`,
   }
 }
