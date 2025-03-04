@@ -41,6 +41,8 @@ export async function createDeploymentPackage(
     envVariablesString += `\nDATABASE_URL=${databaseUrl}`
     envVariablesString += `\nSHADOW_DATABASE_URL=${shadowDatabaseUrl}`
 
+    console.log('envVariablesString', envVariablesString)
+
     // Create .env file
     const envFilePath = path.join(`${tempDir}/${functionName}`, '.env')
     fs.writeFileSync(envFilePath, envVariablesString)
@@ -58,6 +60,7 @@ export async function createDeploymentPackage(
         },
       })
     } catch (error) {
+      console.log('db pull error', error)
       migrationRequired = true
     }
 
@@ -69,8 +72,9 @@ export async function createDeploymentPackage(
 
     if (migrationRequired) {
       // prisma generate
+      // use --create-only if this fails and then migrate deploy
       execSync(
-        `cd ${tempDir}/${functionName} && npx prisma migrate dev --name init --create-only`,
+        `cd ${tempDir}/${functionName} && npx prisma migrate dev --name init`,
         {
           cwd: tempDir,
           stdio: 'pipe',
@@ -84,13 +88,13 @@ export async function createDeploymentPackage(
           },
         }
       )
-      execSync(
-        `cd ${tempDir}/${functionName} && pnpm prisma migrate deploy`,
-        {
-          cwd: tempDir,
-          stdio: 'pipe',
-        }
-      )
+      // execSync(
+      //   `cd ${tempDir}/${functionName} && pnpm prisma migrate deploy`,
+      //   {
+      //     cwd: tempDir,
+      //     stdio: 'pipe',
+      //   }
+      // )
     }
 
     // prisma generate
@@ -115,12 +119,14 @@ export async function createDeploymentPackage(
     // add all files in the function directory
     const allJsFiles = fs.readdirSync(path.join(tempDir, functionName))
     allJsFiles.forEach((file) => {
-      archive.file(path.join(tempDir, functionName, file), { name: file })
+      const filePath = path.join(tempDir, functionName, file)
+      const isDirectory = fs.statSync(filePath).isDirectory()
+      if (isDirectory) {
+        archive.directory(filePath, file)
+      } else {
+        archive.file(filePath, { name: file })
+      }
     })
-    archive.directory(
-      path.join(tempDir, functionName, 'node_modules'),
-      'node_modules'
-    )
 
     await archive.finalize()
 
