@@ -60,6 +60,7 @@ model AgentFunction {
 model Attestations {
   attestationHash String @id
   isSystemPromptValid Boolean
+  result String
   functionCalls String[]
   jsonResponses String[]
   transactionHashes String[]

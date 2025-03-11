@@ -52,6 +52,7 @@ const executeRustCommand = async (command: string) => {
     const resultBuffer = execSync(command)
     const result = resultBuffer.toString()
     console.log('rust command result', result)
+    await new Promise(resolve => setTimeout(resolve, 600))
     const resultJson = JSON.parse(result)
 
     const sent = getJsonFromAttestation(resultJson.sent)
@@ -88,13 +89,43 @@ router.post(
 
     const attestationHash = generateAttestationHash(JSON.stringify(result))
 
+    const attestation = await prisma.attestations.findUnique({
+      where: {
+        attestationHash,
+      },
+    })
+
+    if (attestation) {
+      throw createError(404, 'Attestation already executed')
+    }
+    
     // check system prompt
     const sentMessages = result.sent.messages
     const attestationSystemPrompt = sentMessages?.length > 0 ? sentMessages[0].content : ''
 
-    const isSystemPromptValid = agentWallet.systemPrompt && agentWallet.systemPrompt === attestationSystemPrompt
+    const isSystemPromptValid = Boolean(agentWallet.systemPrompt && agentWallet.systemPrompt === attestationSystemPrompt)
 
     console.log('isSystemPromptValid', isSystemPromptValid)
+
+    if (!isSystemPromptValid) {
+      await prisma.attestations.create({
+        data: {
+          attestationHash,
+          isSystemPromptValid,
+          result: JSON.stringify(result),
+          functionCalls: [],
+          jsonResponses: [],
+          transactionHashes: [],
+        },
+      })
+
+      res.json({
+        attestationHash,
+        result,
+        functionResults: [],
+      })
+      return
+    }
 
     const choices = result.recv.choices
     const toolCalls = choices[0]?.message?.tool_calls
@@ -111,12 +142,40 @@ router.post(
           functionResults.push(functionResult)
         } catch (e) {
           console.error('Error invoking function', e)
+          functionResults.push({
+            jsonResult: null,
+            txnReceipt: null,
+          })
         }
       }
     }
 
-    res.json({ result, functionResults })
+    await prisma.attestations.create({
+      data: {
+        attestationHash,
+        isSystemPromptValid,
+        result: JSON.stringify(result),
+        functionCalls: toolCalls?.map((toolCall: any) => JSON.stringify(toolCall)),
+        jsonResponses: functionResults.map((result: any) => JSON.stringify(result.jsonResult)),
+        transactionHashes: functionResults.map((result: any) => JSON.stringify(result.txnReceipt)),
+      },
+    })
+
+    res.json({ attestationHash, result, functionResults })
   })
 )
+
+router.get('/:attestationHash', asyncHandler(async (req: Request, res: Response) => {
+  const { attestationHash } = req.params
+  const attestation = await prisma.attestations.findUnique({
+    where: { attestationHash },
+  })
+
+  if (!attestation) {
+    throw createError(404, 'Attestation not found')
+  }
+
+  res.json(attestation)
+}))
 
 export default router
