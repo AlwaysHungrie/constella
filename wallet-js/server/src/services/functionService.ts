@@ -198,9 +198,9 @@ export async function invokeFunction(
 
   // execute transaction if present
   if (result.transaction) {
-    const { txnRequest } = result.transaction
+    const { txnRequest, rpcUrl } = result.transaction
     // base sepolia override
-    const rpcUrl = 'https://base-sepolia-rpc.publicnode.com'
+    // const rpcUrl = 'https://base-sepolia-rpc.publicnode.com'
     if (!txnRequest || !rpcUrl) {
       throw createError(400, 'Invalid transaction request')
     }
