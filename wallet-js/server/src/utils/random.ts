@@ -66,3 +66,9 @@ export const generateDbUrls = (
     shadowConnectionString: `postgresql://${dbUser}:${dbPassword}@${dbHost}:${dbPort}/${dbName}_shadow?schema=${schemaName}&sslmode=require&sslrootcert=ca.pem`,
   }
 }
+
+export const generateAttestationHash = (attestation: string) => {
+  const hash = crypto.createHash('sha256')
+  hash.update(attestation)
+  return hash.digest('hex')
+}

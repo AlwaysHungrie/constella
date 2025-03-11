@@ -5,7 +5,7 @@ export const Header = ({
   setWidget,
   openDialog,
 }: {
-  setWidget: (widget: 'register' | 'inspect') => void
+  setWidget: (widget: 'register' | 'inspect' | 'addFunction') => void
   openDialog: (title: string, content: string) => void
 }) => {
   return (
@@ -24,12 +24,12 @@ export const Header = ({
       <div className="flex flex-row gap-2 md:text-sm">
         {[
           {
-            label: 'Agent',
+            label: 'Get Wallet',
             onClick: () => setWidget('register'),
           },
           {
-            label: 'Verify',
-            onClick: () => setWidget('inspect'),
+            label: 'Agent Function',
+            onClick: () => setWidget('addFunction'),
           },
           {
             label: DIALOG_COPY.CONTENT.LINKS.LABEL,

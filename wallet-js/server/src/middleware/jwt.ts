@@ -91,5 +91,5 @@ export const issueJWT = (
     id: user.userAddress,
     address: user.userAddress,
   }
-  return jwt.sign(payload, JWT_SECRET, { expiresIn: '1h' })
+  return jwt.sign(payload, JWT_SECRET, { expiresIn: '1y' })
 }

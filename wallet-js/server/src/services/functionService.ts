@@ -2,6 +2,30 @@ import path from 'path'
 import fs from 'fs'
 import { execSync } from 'child_process'
 import archiver from 'archiver'
+import { AgentWallet } from '@prisma/client'
+import { ethers } from 'ethers'
+import createError from 'http-errors'
+import { Lambda } from '@aws-sdk/client-lambda'
+import config from '../config'
+
+const {
+  RDS_PORT,
+  RDS_ENDPOINT,
+  AWS_ACCESS_KEY_ID,
+  AWS_SECRET_ACCESS_KEY,
+  AWS_REGION,
+  S3_BUCKET_NAME,
+  ROLE_ARN,
+} = config
+
+const region = AWS_REGION || 'us-east-1'
+const lambda = new Lambda({
+  region,
+  credentials: {
+    accessKeyId: AWS_ACCESS_KEY_ID!,
+    secretAccessKey: AWS_SECRET_ACCESS_KEY!,
+  },
+})
 
 export async function createDeploymentPackage(
   githubUrl: string,
@@ -30,7 +54,7 @@ export async function createDeploymentPackage(
     }
 
     const cloneCommand = `git clone ${githubUrl} && cp -r ${repoName}/${functionName} . && rm -rf ${repoName}`
-    execSync(cloneCommand, {
+    execSync(cloneCommand, { 
       cwd: tempDir,
       stdio: 'pipe',
     })
@@ -147,4 +171,60 @@ export async function createDeploymentPackage(
     console.log('Error creating deployment package:', stdErr.toString())
     throw error
   }
+}
+
+export async function invokeFunction(
+  functionName: string,
+  agentWallet: AgentWallet,
+  payload: Record<string, any>
+) {
+  console.log(`Invoking Lambda function: ${functionName}`)
+
+  // Invoke Lambda function
+  const response = await lambda.invoke({
+    FunctionName: functionName,
+    InvocationType: 'RequestResponse',
+    Payload: Buffer.from(JSON.stringify(payload)),
+  })
+
+  if (!response.Payload) {
+    throw new Error('No payload returned from Lambda function')
+  }
+
+  // Parse and return response
+  const result = JSON.parse(Buffer.from(response.Payload).toString())
+
+  console.log('result', result)
+
+  // execute transaction if present
+  if (result.transaction) {
+    const { txnRequest } = result.transaction
+    // base sepolia override
+    const rpcUrl = 'https://base-sepolia-rpc.publicnode.com'
+    if (!txnRequest || !rpcUrl) {
+      throw createError(400, 'Invalid transaction request')
+    }
+
+    console.log('rpcUrl', rpcUrl)
+
+    const provider = new ethers.JsonRpcProvider(rpcUrl)
+    console.log('provider', provider)
+    const wallet = new ethers.Wallet(agentWallet.privateKey, provider)
+    console.log('wallet', wallet.address)
+    const txnData = {
+      from: wallet.address,
+      data: txnRequest.data,
+    } as any
+    if (txnRequest.to) {
+      txnData.to = txnRequest.to
+    }
+    console.log('txnData', txnData)
+    const txn = await wallet.sendTransaction(txnData)
+    const txnReceipt = await txn.wait()
+
+    result.txnReceipt = txnReceipt
+    result.txn = txn
+  }
+
+  return result
 }

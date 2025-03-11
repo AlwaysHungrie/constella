@@ -56,3 +56,11 @@ model AgentFunction {
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
 }
+
+model Attestations {
+  attestationHash String @id
+  isSystemPromptValid Boolean
+  functionCalls String[]
+  jsonResponses String[]
+  transactionHashes String[]
+}

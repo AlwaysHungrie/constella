@@ -2,12 +2,13 @@ import express from 'express'
 import authRouter from './authRoutes'
 import userRouter from './userRouter'
 import agentWalletRouter from './agentWalletRouter'
-
+import attestationRouter from './attestationRouter'
 const router = express.Router()
 
 router.use('/auth', authRouter)
 router.use('/user', userRouter)
 router.use('/agent-wallet', agentWalletRouter)
+router.use('/attestation', attestationRouter)
 
 // Global error handling middleware
 router.use((err: any, req: express.Request, res: express.Response, next: express.NextFunction) => {

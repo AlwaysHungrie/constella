@@ -45,6 +45,11 @@ if (!ROLE_ARN) {
   throw new Error('Missing role ARN')
 }
 
+const RUST_BINARY_PATH = process.env.RUST_BINARY_PATH
+if (!RUST_BINARY_PATH) {
+  throw new Error('Missing rust binary path')
+}
+
 export default {
   PORT,
   FRONTEND_URL,
@@ -62,4 +67,5 @@ export default {
   AWS_REGION,
   S3_BUCKET_NAME,
   ROLE_ARN,
+  RUST_BINARY_PATH,
 }

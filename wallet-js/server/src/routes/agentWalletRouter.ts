@@ -16,7 +16,7 @@ import {
 const router = express.Router()
 
 import config from '../config'
-import { createDeploymentPackage } from '../services/functionService'
+import { createDeploymentPackage, invokeFunction } from '../services/functionService'
 import { cleanupTempFiles, uploadToS3 } from '../utils/fileUtils'
 import {
   Architecture,
@@ -156,7 +156,7 @@ router.post(
         where: {
           walletAddress,
         },
-      })
+      }) 
 
       if (!agentWallet) {
         throw createError(404, 'Agent wallet not found')
@@ -206,11 +206,14 @@ router.post(
           })
         )
 
+        const functionResult = await invokeFunction(functionName, agentWallet, {})
+        await cleanupTempFiles(filesToCleanup)
         res.json({
           success: true,
           message: 'Lambda function updated successfully',
           functionName,
           agentWallet,
+          functionResult,
         })
         return
       }
@@ -234,143 +237,24 @@ router.post(
         })
       )
 
+      // call the function
+      const functionResult = await invokeFunction(functionName, agentWallet, {})
+      await cleanupTempFiles(filesToCleanup)
+
       res.json({
         success: true,
         message: 'Lambda function created successfully',
         functionName,
         agentWallet,
+        functionResult,
       })
+
     } catch (error) {
-      throw error
-    } finally {
       await cleanupTempFiles(filesToCleanup)
+      console.log('Error deploying function', error)
+      throw error
     }
   })
 )
 
-router.post(
-  '/:walletAddress/executeTxn',
-  jwtMiddleware,
-  body('transaction').isObject(),
-  handleValidationErrors,
-  asyncHandler(async (req: AuthenticatedRequest, res: express.Response) => {
-    const { walletAddress } = req.params
-    const { transaction } = req.body
-
-    const { txnRequest, rpcUrl } = transaction
-    if (!txnRequest || !rpcUrl) {
-      throw createError(400, 'Invalid transaction request')
-    }
-
-    const agentWallet = await prisma.agentWallet.findUnique({
-      where: {
-        walletAddress,
-      },
-    })
-
-    if (!agentWallet) {
-      throw createError(404, 'Agent wallet not found')
-    }
-
-    if (agentWallet.creatorAddress !== req.user.address) {
-      throw createError(
-        403,
-        'You are not authorized to execute this transaction'
-      )
-    }
-
-    console.log('rpcUrl', rpcUrl)
-    const provider = new ethers.JsonRpcProvider(rpcUrl)
-    const network = await provider.getNetwork()
-    console.log('network', network)
-    console.log('provider', provider)
-    const wallet = new ethers.Wallet(agentWallet.privateKey, provider)
-    console.log('wallet', wallet)
-
-    console.log('txnRequest', txnRequest)
-    const data = txnRequest.data
-    console.log('data.length', data.length)
-
-    const txn = await wallet.sendTransaction({
-      from: wallet.address,
-      data: txnRequest.data,
-    })
-    console.log('txn', txn)
-    const txnReceipt = await txn.wait()
-
-    res.json({
-      success: true,
-      message: 'Transaction executed successfully',
-      txn,
-      txnReceipt,
-    })
-  })
-)
-
-router.post(
-  '/:walletAddress/function/:functionName/invoke',
-  jwtMiddleware,
-  body('payload').isObject(),
-  handleValidationErrors,
-  asyncHandler(async (req: AuthenticatedRequest, res: express.Response) => {
-    const { walletAddress, functionName } = req.params
-    const { payload } = req.body
-
-    const agentWallet = await prisma.agentWallet.findUnique({
-      where: {
-        walletAddress,
-      },
-    })
-
-    if (!agentWallet) {
-      throw createError(404, 'Agent wallet not found')
-    }
-
-    if (agentWallet.creatorAddress !== req.user.address) {
-      throw createError(403, 'You are not authorized to invoke this function')
-    }
-
-    console.log(`Invoking Lambda function: ${functionName}`)
-
-    // Invoke Lambda function
-    const response = await lambda.invoke({
-      FunctionName: functionName,
-      InvocationType: 'RequestResponse',
-      Payload: Buffer.from(JSON.stringify(payload)),
-    })
-
-    if (!response.Payload) {
-      throw new Error('No payload returned from Lambda function')
-    }
-
-    // Parse and return response
-    const result = JSON.parse(Buffer.from(response.Payload).toString())
-
-    // execute transaction if present
-
-    if (result.transaction) {
-      const { txnRequest, rpcUrl } = result.transaction
-      if (!txnRequest || !rpcUrl) {
-        throw createError(400, 'Invalid transaction request')
-      }
-
-      const provider = new ethers.JsonRpcProvider(rpcUrl)
-      const wallet = new ethers.Wallet(agentWallet.privateKey, provider)
-      const txnData = {
-        from: wallet.address,
-        data: txnRequest.data,
-      } as any
-      if (txnRequest.to) {
-        txnData.to = txnRequest.to
-      }
-      const txn = await wallet.sendTransaction(txnData)
-      const txnReceipt = await txn.wait()
-
-      result.txnReceipt = txnReceipt
-      result.txn = txn
-    }
-
-    res.json(result)
-  })
-)
 export default router

@@ -1,53 +1,52 @@
 'use client'
 
 import { usePrivy } from '@privy-io/react-auth'
-import { useCallback, useEffect, useState } from 'react'
-import { HiExternalLink, HiInformationCircle } from 'react-icons/hi'
+import { useCallback, useState } from 'react'
+import { HiInformationCircle } from 'react-icons/hi'
 import { Popover, PopoverContent, PopoverTrigger } from './ui/popover'
-import Link from 'next/link'
 import CTAButton from './cta'
 import { DialogContent } from './dialog'
+import { Footer } from './footer'
 
 export const RegisterWallet = ({
   setDialog,
+  token,
 }: {
   setDialog: (dialog: DialogContent) => void
+  token: string | null
 }) => {
-  const { logout, user, login, authenticated } = usePrivy()
+  const { user, login, authenticated } = usePrivy()
 
   const [domain, setDomain] = useState<string>('')
   const [systemPrompt, setSystemPrompt] = useState<string>('')
 
   const address = user?.wallet?.address
 
-  const getNonce = useCallback(async (userAddress: string) => {
-    try {
-      await fetch(`${process.env.NEXT_PUBLIC_WALLET_HOST}/register/get-nonce`, {
-        method: 'POST',
-        body: JSON.stringify({ userAddress }),
-      })
-    } catch (error) {
-      console.log(error)
-    }
-  }, [])
-
   const registerWallet = useCallback(
     async (address: string, domain: string, systemPrompt: string) => {
       try {
+        if (!token) return
+        const body = { address, domain, systemPrompt }
+        console.log(body)
         const response = await fetch(
-          `${process.env.NEXT_PUBLIC_WALLET_HOST}/register/wallet`,
+          `${process.env.NEXT_PUBLIC_WALLET_HOST}/agent-wallet`,
           {
             method: 'POST',
-            body: JSON.stringify({ address, domain, systemPrompt }),
+            body: JSON.stringify(body),
+            headers: {
+              Authorization: `Bearer ${token}`,
+              'Content-Type': 'application/json',
+            },
           }
         )
 
         const data = await response.json()
         console.log(data)
-        if (data.error === 'Wallet already exists') {
+        const agentAddress = data.agentWallet.walletAddress
+        if (data.message === 'Wallet already exists') {
           setDialog({
             TITLE: 'agent-found',
-            CONTENT: `An agent with this domain and system prompt already exists. It's wallet address is ${data.address}. Use a different domain or system prompt to register a new agent.`,
+            CONTENT: `An agent with this domain and system prompt already exists. It's wallet address is ${agentAddress}. Use a different domain or system prompt to register a new agent.`,
           })
 
           return
@@ -55,7 +54,7 @@ export const RegisterWallet = ({
 
         setDialog({
           TITLE: 'agent-created',
-          CONTENT: `A wallet has been created for your agent. It's wallet address is ${data.address}. You can now use the registered domain to send attestations and use this wallet.`,
+          CONTENT: `A wallet has been created for your agent. It's wallet address is ${agentAddress}. You can now use the registered domain to send attestations and use this wallet.`,
         })
       } catch (error) {
         console.log(error)
@@ -67,13 +66,8 @@ export const RegisterWallet = ({
         }
       }
     },
-    []
+    [token, setDialog]
   )
-
-  useEffect(() => {
-    if (!address) return
-    getNonce(address)
-  }, [address, getNonce])
 
   return (
     <div className="relative text-[#05D505] my-4 flex-1 flex flex-col justify-center aspect-[16/9] w-[400px] max-w-[90vw] mx-auto px-2">
@@ -84,10 +78,6 @@ export const RegisterWallet = ({
           // minHeight: 'min(70vh, 600px)',
         }}
       >
-        {/* <div className="text-2xl font-bold sm:my-2 w-full text-center">
-          Agentic Wallet v0.0.1
-        </div> */}
-
         <div className="text-2xl font-bold text-center">
           Autonomous Wallet v0.0.1
         </div>
@@ -223,28 +213,7 @@ export const RegisterWallet = ({
           </CTAButton>
         )}
       </div>
-      {user?.wallet?.address && (
-        <div className="absolute bottom-[-24px] right-0">
-          <div className="flex flex-col text-xs font-bold w-full">
-            <div className="cursor-pointer" onClick={logout}>
-              ⦿ Disconnect Wallet
-            </div>
-          </div>
-        </div>
-      )}
-
-      <div className="absolute bottom-[-24px] left-0">
-        <div className="flex flex-col text-xs font-bold w-full">
-          <Link
-            href="https://playground-frontend.constella.one"
-            target="_blank"
-            className="flex items-center gap-1"
-          >
-            <HiExternalLink className="w-4 h-4 text-[#05D505] hover:opacity-80 transition-opacity" />
-            Playground
-          </Link>
-        </div>
-      </div>
+      <Footer />
     </div>
   )
 }
