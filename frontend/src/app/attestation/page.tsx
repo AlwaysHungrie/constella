@@ -1,6 +1,6 @@
 'use client'
 import { useSearchParams } from 'next/navigation'
-import { useCallback, useEffect, useState } from 'react'
+import { Suspense, useCallback, useEffect, useState } from 'react'
 import { Loader, LucideAlertTriangle } from 'lucide-react'
 
 type Attestation = {
@@ -13,7 +13,7 @@ type Attestation = {
   transactionHashes: string[]
 }
 
-export default function AttestationPage() {
+function AttestationPage() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const searchParams = useSearchParams()
@@ -198,5 +198,13 @@ export default function AttestationPage() {
         {renderAttestationData()}
       </div>
     </div>
+  )
+}
+
+export default function AttestationPageWrapper() {
+  return (
+    <Suspense>
+      <AttestationPage />
+    </Suspense>
   )
 }
