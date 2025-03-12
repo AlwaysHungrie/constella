@@ -198,9 +198,10 @@ export async function invokeFunction(
 
   // execute transaction if present
   if (result.transaction) {
-    const { txnRequest, rpcUrl } = result.transaction
+    const { txnRequest } = result.transaction
     // base sepolia override
     // const rpcUrl = 'https://base-sepolia-rpc.publicnode.com'
+    const rpcUrl = 'https://sepolia-rpc.scroll.io'
     if (!txnRequest || !rpcUrl) {
       throw createError(400, 'Invalid transaction request')
     }
@@ -217,6 +218,9 @@ export async function invokeFunction(
     } as any
     if (txnRequest.to) {
       txnData.to = txnRequest.to
+    }
+    if (txnRequest.value) {
+      txnData.value = BigInt(txnRequest.value)
     }
     console.log('txnData', txnData)
     const txn = await wallet.sendTransaction(txnData)
