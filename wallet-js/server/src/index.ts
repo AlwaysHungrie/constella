@@ -1,19 +1,22 @@
-import express from "express";
-import cors from "cors";
-import config from "./config";
-import router from "./routes/apiRouter";
+import express from 'express'
+import cors from 'cors'
+import config from './config'
+import router from './routes/apiRouter'
 
-const { PORT, FRONTEND_URL } = config;
+const { PORT } = config
 
-const app = express();
+const app = express()
 
-app.use(cors({
-  origin: FRONTEND_URL,
-}));
-app.use(express.json());
+app.use(
+  cors({
+    origin: '*',
+  })
+)
 
-app.use("/api/v1", router);
+app.use(express.json())
+
+app.use('/api/v1', router)
 
 app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
-});
+  console.log(`Server is running on port ${PORT}`)
+})
